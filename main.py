@@ -22,7 +22,11 @@ async def cmd_start(message: types.Message):
     except Exception as e:
         logging.error(e)
         answer = "Я хотел ответить на этот вопрос, но мне отрезали нос и я расхотел."
-    await message.answer(answer)
+    await message.answer(
+        answer,
+        parse_mode="Markdown",
+        reply_to_message_id=message.message_id,
+    )
 
 async def main():
     await dp.start_polling(bot)
