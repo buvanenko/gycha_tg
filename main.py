@@ -13,10 +13,13 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    await message.answer("Абоба!")
+    await message.answer(str(message.chat.id))
 
 @dp.message()
-async def cmd_start(message: types.Message):
+async def chitchat(message: types.Message):
+    if message.chat.id != -1002261267865:
+        await message.answer("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
+        return
     try:
         answer = await chat.get_response(message.text, message.from_user.id)
     except Exception as e:
