@@ -23,6 +23,26 @@ async def chitchat(message: types.Message):
         await message.answer("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
         return
 
+    if message.video is not None:
+        data = await bot.get_file(message.video.thumbnail.file_id)
+        url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
+        text = await ocr.get(url)
+        if len(text) == 0:
+            text = "В канале опубликовано видео."
+        else:
+            text = "В канале опубликован видео с таким текстом:" + text
+        try:
+            answer = await chat.get_response(text,"System")
+        except Exception as e:
+            logging.error(e)
+            answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
+        await message.answer(
+            answer,
+            parse_mode="Markdown",
+            reply_to_message_id=message.message_id
+        )
+        return
+
     if message.photo is not None:
         data = await bot.get_file(message.photo[-1].file_id)
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
