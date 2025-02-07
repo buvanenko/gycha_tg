@@ -19,9 +19,9 @@ async def cmd_start(message: types.Message):
 @dp.message()
 async def chitchat(message: types.Message):
 
-    if message.chat.id != -1002261267865:
-        await message.answer("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
-        return
+    # if message.chat.id != -1002261267865:
+    #     await message.answer("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
+    #     return
 
     if message.photo is not None:
         data = await bot.get_file(message.photo[-1].file_id)
