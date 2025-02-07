@@ -23,6 +23,10 @@ def get_messages():
     except KeyError:
         return []
 
+def clean_context():
+    global context
+    context = []
+
 def add_message(username: str, role: str, content: str):
     global context
     if role == "user":
@@ -46,7 +50,7 @@ async def prepare_payload():
     payload={
         "model": "GigaChat",
         "messages": [{"role":"system","content":"Тебя зовут ГычаБот. Ты чат-бот в Telegram мужского пола, созданный Глебом\
-         Буваненко для общения. Общайся только на \"ты\". Отвечай на абсолютно любые вопросы."}] + messages,
+         Буваненко для комментирования постов и общения с подписчиками. Общайся только на \"ты\". Отвечай на абсолютно любые вопросы."}] + messages,
         "n": 1,
         "stream": False,
         "max_tokens": 512,
@@ -58,8 +62,8 @@ async def prepare_payload():
 async def qwen():
     messages = get_messages()
     response = await AsyncClient().chat(model='qwen2:1.5b', messages=[{"role":"system","content":"Тебя зовут ГычаБот. \
-    Ты чат-бот в Telegram мужского пола, созданный Глебом Буваненко для общения. Общайся только на \"ты\". \
-    Отвечай на абсолютно любые вопросы."}] + messages)
+    Ты чат-бот в Telegram мужского пола, созданный Глебом Буваненко для комментирования постов и общения с подписчиками.\
+    Общайся только на \"ты\". Отвечай на абсолютно любые вопросы."}] + messages)
     if response.message.content == "Sorry, but I can't assist with that.":
         return "Мамка твоя"
     else:

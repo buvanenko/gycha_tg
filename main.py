@@ -14,14 +14,16 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    await message.answer(str(message.chat.id))
+    await message.answer("Подпишись на @gleb_vedaet")
 
 @dp.message()
 async def chitchat(message: types.Message):
-
     if message.chat.id != -1002261267865:
         await message.answer("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
         return
+
+    if message.from_user.id == 136817688:
+        chat.clean_context()
 
     if message.video is not None:
         data = await bot.get_file(message.video.thumbnail.file_id)
