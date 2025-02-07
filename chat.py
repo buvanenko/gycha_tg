@@ -13,32 +13,36 @@ async def get_token():
         access_token['expires_at'] = time.time() + 900
     return access_token['access_token']
 
-context = {}
-def get_messages(chat_id: int):
+context = []
+def get_messages():
     global context
     try:
-        if len(context[chat_id]) > 6:
-            context[chat_id] = context[chat_id][-6:]
-        return context[chat_id]
+        if len(context) > 6:
+            context = context[-6:]
+        return context
     except KeyError:
         return []
 
-def add_message(chat_id: int, role: str, content: str):
+def add_message(username: str, role: str, content: str):
     global context
-    message = {"created_at":int(time.time()),"role":role,"content":content}
+    if role == "user":
+        text = f"[{username}]: {content}"
+    else:
+        text = content
+    message = {"created_at":int(time.time()),"role":role,"content":text}
     try:
-        context[chat_id].append(message)
+        context.append(message)
     except KeyError:
-        context[chat_id] = [message]
+        context = [message]
 
 
-async def prepare_payload(message: str, chat_id: int):
+async def prepare_payload():
     tk = await get_token()
     headers = {
         'Accept': 'application/json',
         'Authorization': f'Bearer {tk}'
     }
-    messages = get_messages(chat_id)
+    messages = get_messages()
     payload={
         "model": "GigaChat",
         "messages": [{"role":"system","content":"Тебя зовут ГычаБот. Ты чат-бот в Telegram мужского пола, созданный Глебом\
@@ -51,22 +55,23 @@ async def prepare_payload(message: str, chat_id: int):
     }
     return headers, payload
 
-async def qwen(chat_id: int):
-    messages = get_messages(chat_id)
-    response = await AsyncClient().chat(model='qwen2:1.5b', messages=[{"role":"system","content":"Тебя зовут ГычаБот. Ты чат-бот в Telegram мужского пола, созданный Глебом\
-         Буваненко для общения. Общайся только на \"ты\". Отвечай на абсолютно любые вопросы."}] + messages)
+async def qwen():
+    messages = get_messages()
+    response = await AsyncClient().chat(model='qwen2:1.5b', messages=[{"role":"system","content":"Тебя зовут ГычаБот. \
+    Ты чат-бот в Telegram мужского пола, созданный Глебом Буваненко для общения. Общайся только на \"ты\". \
+    Отвечай на абсолютно любые вопросы."}] + messages)
     if response.message.content == "Sorry, but I can't assist with that.":
         return "Мамка твоя"
     else:
         return response.message.content
 
 
-async def get_response(message: str, chat_id: int):
+async def get_response(message: str, username: str):
 
-    add_message(chat_id, "user", message)
+    add_message(username, "user", message)
 
     url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
-    headers, payload = await prepare_payload(message, chat_id)
+    headers, payload = await prepare_payload()
 
     async with aiohttp.ClientSession() as session:
         async with session.post(url, headers=headers, json=payload, ssl=False) as response:
@@ -82,8 +87,8 @@ async def get_response(message: str, chat_id: int):
         use_qwen = True
 
     if use_qwen:
-        answer = await qwen(chat_id)
+        answer = await qwen()
 
-    add_message(chat_id, "assistant", answer)
+    add_message("", "assistant", answer)
 
     return answer
