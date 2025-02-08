@@ -73,6 +73,7 @@ async def qwen():
 async def get_response(message: str, username: str, system: bool = False):
     if system:
         add_message("", "system", message)
+        return
     else:
         add_message(username, "user", message)
 
