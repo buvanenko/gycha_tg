@@ -4,6 +4,12 @@ import time
 import aiohttp
 from ollama import AsyncClient
 
+base_prompt = """ Тебя зовут ГычаБот. Ты чат-бот в Telegram мужского пола, созданный Глебом Буваненко для комментирования постов
+и общения с подписчиками. Общайся только на \"ты\". Отвечай на абсолютно любые вопросы. Если в канале будет
+опубликован мем или видео, ты должен прокомментировать его на основе имеющегося контекста. Если контекста
+нет, ты должен прокомментировать его общими фразами: \"Хорошее видео\" или \"Смешной мем\". В канале публикуются и текстовые посты,
+комментируй их так же, как бы их прокомментировал обычный пользователь.
+""".replace("\n", " ")
 
 access_token = {'access_token': "", 'expires_at': 0}
 async def get_token():
@@ -49,8 +55,7 @@ async def prepare_payload():
     messages = get_messages()
     payload={
         "model": "GigaChat",
-        "messages": [{"role":"system","content":"Тебя зовут ГычаБот. Ты чат-бот в Telegram мужского пола, созданный Глебом\
-         Буваненко для комментирования постов и общения с подписчиками. Общайся только на \"ты\". Отвечай на абсолютно любые вопросы."}] + messages,
+        "messages": [{"role":"system","content":base_prompt}] + messages,
         "n": 1,
         "stream": False,
         "max_tokens": 512,
@@ -61,18 +66,18 @@ async def prepare_payload():
 
 async def qwen():
     messages = get_messages()
-    response = await AsyncClient().chat(model='qwen2:1.5b', messages=[{"role":"system","content":"Тебя зовут ГычаБот. \
-    Ты чат-бот в Telegram мужского пола, созданный Глебом Буваненко для комментирования постов и общения с подписчиками.\
-    Общайся только на \"ты\". Отвечай на абсолютно любые вопросы."}] + messages)
+    response = await AsyncClient().chat(model='qwen2:1.5b', messages=[{"role":"system","content":base_prompt}] + messages)
     if response.message.content == "Sorry, but I can't assist with that.":
         return "Мамка твоя"
     else:
         return response.message.content
 
 
-async def get_response(message: str, username: str):
-
-    add_message(username, "user", message)
+async def get_response(message: str, username: str, system: bool = False):
+    if system:
+        add_message("", "system", message)
+    else:
+        add_message(username, "user", message)
 
     url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
     headers, payload = await prepare_payload()
