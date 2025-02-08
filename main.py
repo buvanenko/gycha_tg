@@ -14,7 +14,7 @@ dp = Dispatcher()
 
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    await message.answer(message.model_dump_json())
+    await message.answer(str(message.from_user.id))
 
 @dp.message()
 async def chitchat(message: types.Message):
