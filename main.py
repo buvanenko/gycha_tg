@@ -38,11 +38,11 @@ async def chitchat(message: types.Message):
         except Exception as e:
             logging.error(e)
             answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
-        await message.answer(
-            answer,
-            parse_mode="Markdown",
-            reply_to_message_id=message.message_id
-        )
+        # await message.answer(
+        #     answer,
+        #     parse_mode="Markdown",
+        #     reply_to_message_id=message.message_id
+        # )
         return
     elif message.photo is not None and message.from_user.id == 136817688:
         data = await bot.get_file(message.photo[-1].file_id)
@@ -57,13 +57,13 @@ async def chitchat(message: types.Message):
         except Exception as e:
             logging.error(e)
             answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
-        await message.answer(
-            answer,
-            parse_mode="Markdown",
-            reply_to_message_id=message.message_id
-        )
+        # await message.answer(
+        #     answer,
+        #     parse_mode="Markdown",
+        #     reply_to_message_id=message.message_id
+        # )
         return
-    elif message.from_user.id == 136817688 and message.text is not None:
+    if message.from_user.id == 136817688 and message.text is not None:
         text = "В канале опубликован пост с таким текстом:" + message.text
         try:
             answer = await chat.get_response(text,"System", system=True)
