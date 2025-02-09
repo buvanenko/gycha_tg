@@ -22,15 +22,7 @@ async def chitchat(message: types.Message):
         await message.answer("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
         return
 
-    if message.from_user.id == 136817688:
-        chat.clean_context()
-        await message.answer(
-            "Приветствую! Готов обсудить с тобой данную публикацию.",
-            parse_mode="Markdown",
-            reply_to_message_id=message.message_id
-        )
-
-    if message.video is not None and message.from_user.id == 136817688:
+    if message.video is not None:
         data = await bot.get_file(message.video.thumbnail.file_id)
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
         text = await ocr.get(url)
@@ -43,13 +35,13 @@ async def chitchat(message: types.Message):
         except Exception as e:
             logging.error(e)
             answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
-        # await message.answer(
-        #     answer,
-        #     parse_mode="Markdown",
-        #     reply_to_message_id=message.message_id
-        # )
+        await message.answer(
+            answer,
+            parse_mode="Markdown",
+            reply_to_message_id=message.message_id
+        )
         return
-    elif message.photo is not None and message.from_user.id == 136817688:
+    elif message.photo is not None:
         data = await bot.get_file(message.photo[-1].file_id)
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
         text = await ocr.get(url)
@@ -62,24 +54,11 @@ async def chitchat(message: types.Message):
         except Exception as e:
             logging.error(e)
             answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
-        # await message.answer(
-        #     answer,
-        #     parse_mode="Markdown",
-        #     reply_to_message_id=message.message_id
-        # )
-        return
-    if message.from_user.id == 136817688 and message.text is not None:
-        text = "В канале опубликован пост с таким текстом:" + message.text
-        try:
-            answer = await chat.get_response(text,"System", system=True)
-        except Exception as e:
-            logging.error(e)
-            answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
-        # await message.answer(
-        #     answer,
-        #     parse_mode="Markdown",
-        #     reply_to_message_id=message.message_id
-        # )
+        await message.answer(
+            answer,
+            parse_mode="Markdown",
+            reply_to_message_id=message.message_id
+        )
         return
 
     try:
