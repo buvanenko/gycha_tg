@@ -24,6 +24,11 @@ async def chitchat(message: types.Message):
 
     if message.from_user.id == 136817688:
         chat.clean_context()
+        await message.answer(
+            "Приветствую! Готов обсудить с тобой данную публикацию.",
+            parse_mode="Markdown",
+            reply_to_message_id=message.message_id
+        )
 
     if message.video is not None and message.from_user.id == 136817688:
         data = await bot.get_file(message.video.thumbnail.file_id)
@@ -70,11 +75,11 @@ async def chitchat(message: types.Message):
         except Exception as e:
             logging.error(e)
             answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
-        await message.answer(
-            answer,
-            parse_mode="Markdown",
-            reply_to_message_id=message.message_id
-        )
+        # await message.answer(
+        #     answer,
+        #     parse_mode="Markdown",
+        #     reply_to_message_id=message.message_id
+        # )
         return
 
     try:
