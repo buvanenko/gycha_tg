@@ -44,6 +44,8 @@ def add_message(username: str, role: str, content: str):
     else:
         text = content
     message = {"created_at":int(time.time()),"role":role,"content":text}
+    if username == "System":
+        context = []
     try:
         context.append(message)
     except KeyError:

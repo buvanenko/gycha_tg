@@ -39,7 +39,7 @@ async def chitchat(message: types.Message):
                 text = "В канале опубликовано видео."
         else:
             text = "В канале опубликован видео с таким текстом:" + text
-
+        print(text)
         try:
             answer = await chat.get_response(text,"System")
         except Exception as e:

@@ -6,19 +6,20 @@ from PIL import Image
 
 import asyncio
 
+model = md.vl(model="moondream-0_5b-int8.mf.gz")
+
 async def get(url: str):
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             content = await response.read()
 
-    model = md.vl(model="moondream-0_5b-int8.mf.gz")
-
     img = Image.open(BytesIO(content))
     encoded_image = model.encode_image(img)
 
     caption = model.caption(encoded_image)["caption"]
     print(caption)
+
     return caption
 
 async def main():
