@@ -27,8 +27,8 @@ context = []
 def get_messages():
     global context
     try:
-        if len(context) > 6:
-            context = context[-6:]
+        if len(context) > 15:
+            context = context[-15:]
         return context
     except KeyError:
         return []
