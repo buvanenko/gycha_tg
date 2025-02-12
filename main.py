@@ -30,7 +30,7 @@ async def chitchat(message: types.Message):
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
 
         text = await ocr.get(url)
-        if len(text) == 0:
+        if len(text.replace(" ","")) == 0:
             try:
                 text = await vision.get(url)
                 text = "В канале опубликовано видео. Словесное описание кадра: " + text
