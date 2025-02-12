@@ -1,6 +1,5 @@
 import asyncio
 import logging
-from platform import system
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
@@ -8,6 +7,7 @@ from aiogram.filters.command import Command
 import config
 import chat
 import ocr
+import vision
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,6 +20,7 @@ async def cmd_start(message: types.Message):
 
 @dp.message()
 async def chitchat(message: types.Message):
+
     if message.chat.id != -1002261267865:
         await message.answer("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
         return
@@ -27,11 +28,18 @@ async def chitchat(message: types.Message):
     if message.video is not None:
         data = await bot.get_file(message.video.thumbnail.file_id)
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
+
         text = await ocr.get(url)
         if len(text) == 0:
-            text = "В канале опубликовано видео."
+            try:
+                text = await vision.get(url)
+                text = "В канале опубликовано видео. Словесное описание кадра: " + text
+            except Exception as e:
+                logging.error(e)
+                text = "В канале опубликовано видео."
         else:
             text = "В канале опубликован видео с таким текстом:" + text
+
         try:
             answer = await chat.get_response(text,"System")
         except Exception as e:
@@ -43,14 +51,25 @@ async def chitchat(message: types.Message):
             reply_to_message_id=message.message_id
         )
         return
+
+
     elif message.photo is not None:
         data = await bot.get_file(message.photo[-1].file_id)
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
+
         text = await ocr.get(url)
         if len(text) == 0:
-            text = "В канале опубликован мем без текста или с нераспознанным текстом."
+            try:
+                text = await vision.get(url)
+                text = "В канале опубликован мем. Словесное описание: " + text
+            except Exception as e:
+                logging.error(e)
+                text = "В канале опубликован мем без текста или с нераспознанным текстом."
         else:
             text = "В канале опубликован мем с таким текстом:" + text
+
+        print(text)
+
         try:
             answer = await chat.get_response(text,"System")
         except Exception as e:
