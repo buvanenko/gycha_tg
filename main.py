@@ -29,17 +29,20 @@ async def chitchat(message: types.Message):
         data = await bot.get_file(message.video.thumbnail.file_id)
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
 
-        text = await ocr.get(url)
-        if len(text.replace(" ","")) == 0:
-            try:
-                text = await vision.get(url)
-                text = "В канале опубликовано видео. Словесное описание кадра: " + text
-            except Exception as e:
-                logging.error(e)
+
+        try:
+            text = await vision.get(url)
+            text = "В канале опубликовано видео. Словесное описание кадра: " + text
+        except Exception as e:
+            logging.error(e)
+            text = await ocr.get(url)
+            if len(text.replace(" ","")) == 0:
                 text = "В канале опубликовано видео."
-        else:
-            text = "В канале опубликован видео с таким текстом:" + text
+            else:
+                text = "В канале опубликован видео с таким текстом:" + text
+
         print(text)
+
         try:
             answer = await chat.get_response(text,"System")
         except Exception as e:
@@ -57,16 +60,16 @@ async def chitchat(message: types.Message):
         data = await bot.get_file(message.photo[-1].file_id)
         url = f"https://api.telegram.org/file/bot{config.TG_TOKEN}/{data.file_path}"
 
-        text = await ocr.get(url)
-        if len(text) == 0:
-            try:
-                text = await vision.get(url)
-                text = "В канале опубликован мем. Словесное описание: " + text
-            except Exception as e:
-                logging.error(e)
+        try:
+            text = await vision.get(url)
+            text = "В канале опубликован мем. Словесное описание: " + text
+        except Exception as e:
+            logging.error(e)
+            text = await ocr.get(url)
+            if len(text.replace(" ","")) == 0:
                 text = "В канале опубликован мем без текста или с нераспознанным текстом."
-        else:
-            text = "В канале опубликован мем с таким текстом:" + text
+            else:
+                text = "В канале опубликован мем с таким текстом:" + text
 
         print(text)
 
