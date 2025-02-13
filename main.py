@@ -32,15 +32,13 @@ async def chitchat(message: types.Message):
 
         try:
             text = await vision.get(url)
-            text = "В канале опубликовано видео. Словесное описание кадра: " + text
+            text = "В канале опубликовано видео. Словесное описание кадра: " + text + '. '
         except Exception as e:
             logging.error(e)
-            text = await ocr.get(url)
-            if len(text.replace(" ","")) == 0:
-                text = "В канале опубликовано видео."
-            else:
-                text = "В канале опубликован видео с таким текстом:" + text
+            text = "В канале опубликовано видео. "
 
+        text_ocr = await ocr.get(url)
+        text += 'Распознанный текст: ' + text_ocr
         print(text)
 
         try:
@@ -62,14 +60,13 @@ async def chitchat(message: types.Message):
 
         try:
             text = await vision.get(url)
-            text = "В канале опубликован мем. Словесное описание: " + text
+            text = "В канале опубликован мем. Словесное описание: " + text + '. '
         except Exception as e:
             logging.error(e)
-            text = await ocr.get(url)
-            if len(text.replace(" ","")) == 0:
-                text = "В канале опубликован мем без текста или с нераспознанным текстом."
-            else:
-                text = "В канале опубликован мем с таким текстом:" + text
+            text = "В канале опубликован мем. "
+
+        text_ocr = await ocr.get(url)
+        text += 'Распознанный текст: ' + text_ocr
 
         print(text)
 
