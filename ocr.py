@@ -3,7 +3,7 @@ import pytesseract
 from io import BytesIO
 from PIL import Image
 
-# pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 
 async def get(url):
     async with aiohttp.ClientSession() as session:
