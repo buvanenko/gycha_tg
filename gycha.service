@@ -7,7 +7,7 @@ WorkingDirectory=/mnt/gycha
 ExecStart=/mnt/gycha/.venv/bin/python3 /mnt/gycha/main.py
 Environment="PATH=/mnt/gycha/.venv/bin"
 Restart=always
-User=rtatex
+User=servicer
 KillMode=mixed
 
 SyslogIdentifier=gycha
