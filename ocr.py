@@ -8,7 +8,7 @@ from sys import platform
 if platform == 'win32':
     pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 else:
-    pytesseract.pytesseract.tesseract_cmd = './usr/bin/tesseract'
+    pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 async def get(url):
     async with aiohttp.ClientSession() as session:
