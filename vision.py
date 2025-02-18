@@ -7,8 +7,6 @@ async def get(url: str):
         async with session.get(url) as response:
             content = await response.read()
 
-    # img = BytesIO(content)
+    caption = await AsyncClient().generate(model="moondream", prompt="Describe this image in as much detail as possible, listing all the details.", images=[content])
 
-    caption = await AsyncClient().generate(model="moondream", prompt="What is this?", images=[content])
-    print(caption.response)
     return caption.response
