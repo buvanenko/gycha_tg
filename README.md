@@ -5,10 +5,12 @@
 ## Установка
 **Требования:** Python 3.11.0, 6Гб ОЗУ.
 
-Устанавливаем ollama и qwen2:1b
+Устанавливаем ollama, qwen2:1b и moondream
 ```sh
 curl -fsSL https://ollama.com/install.sh | sh
 ollama run qwen2:1.5b
+/bye
+ollama run moondream
 /bye
 ```
 Устанавливаем tesseract для распознавания текста
@@ -24,10 +26,6 @@ cd gycha_tg
 python3 -m venv venv
 . venv/bin/activate
 pip install -r requirements.txt
-```
-Устанавливаем moondream:0.5b
-```sh
-wget https://huggingface.co/vikhyatk/moondream2/resolve/9dddae84d54db4ac56fe37817aeaeb502ed083e2/moondream-0_5b-int8.mf.gz?download=true
 ```
 Создаём файл .env со следующим содержимым:
 ```
