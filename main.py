@@ -20,9 +20,9 @@ async def cmd_start(message: types.Message):
 @dp.message()
 async def chitchat(message: types.Message):
 
-    # if message.chat.id != -1002261267865:
-    #     await message.reply("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
-    #     return
+    if message.chat.id != -1002261267865:
+        await message.reply("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
+        return
 
     if message.is_automatic_forward and message.video is not None:
         chat.clean_context()
