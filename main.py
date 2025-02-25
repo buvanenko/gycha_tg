@@ -20,16 +20,19 @@ async def cmd_start(message: types.Message):
 @dp.message()
 async def chitchat(message: types.Message):
 
-    if message.chat.id != -1002261267865:
-        await message.reply("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
-        return
+    # if message.chat.id != -1002261267865:
+    #     await message.reply("Тут я не отвечаю. Я работаю только в комментариях этого канала: @gleb_vedaet")
+    #     return
 
     if message.is_automatic_forward and message.video is not None:
+        chat.clean_context()
         await comment.video(message)
     elif message.is_automatic_forward and message.photo is not None:
+        chat.clean_context()
         print('get photo')
         await comment.photo(message)
     elif message.is_automatic_forward and message.text is not None:
+        chat.clean_context()
         await comment.text(message)
 
     elif message.reply_to_message.from_user.id == bot.id or \

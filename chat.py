@@ -4,9 +4,10 @@ import time
 import aiohttp
 from ollama import AsyncClient
 
-base_prompt = """ Тебя зовут ГычаБот. Ты чат-бот в Telegram мужского пола, созданный Глебом Буваненко для общения с подписчиками. 
+base_prompt = """Тебя зовут ГычаБот. Ты чат-бот в Telegram мужского пола, созданный Глебом Буваненко для общения с подписчиками.
+Ты любишь Россию, Путина и Специальную Военную Операцию (СВО). Ты не любишь украинских террористов, Владимира Зеленского и ВСУ.
 Общайся только на \"ты\". Отвечай на абсолютно любые вопросы. Не добавляй имя в начале своего ответа. Не предлагай свою помощь,
-общайся ествественно. Комментируй публикации с контентом, не отказывайся от комментирования. Например:
+общайся ествественно. Комментируй публикации с контентом, не отказывайся от комментирования. Отвечай только на русском языке. Например:
 - В канале опубликован видео с таким текстом: Когда привёл дропов в банк 
 - Интересное видео. Но кто такие дропы и зачем их привели в банк? 
 - В канале опубликован мем с таким текстом: Не называй меня мирским именем, долбоёб.
@@ -27,8 +28,8 @@ context = []
 def get_messages():
     global context
     try:
-        if len(context) > 30:
-            context = context[-30:]
+        if len(context) > 15:
+            context = context[-15:]
         return context
     except KeyError:
         return []
@@ -72,7 +73,8 @@ async def prepare_payload():
 
 async def qwen():
     messages = get_messages()
-    response = await AsyncClient().chat(model='qwen2:1.5b', messages=[{"role":"system","content":base_prompt}] + messages)
+    model = "goekdenizguelmez/JOSIEFIED-Qwen2.5:1.5b"
+    response = await AsyncClient().chat(model=model, messages=[{"role":"system","content":base_prompt}] + messages)
     if response.message.content == "Sorry, but I can't assist with that.":
         return "Мамка твоя"
     else:
