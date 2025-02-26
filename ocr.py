@@ -10,7 +10,7 @@ if platform == 'win32':
 else:
     pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
-async def get(url):
+async def get(url: str) -> str:
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             content = await response.read()
