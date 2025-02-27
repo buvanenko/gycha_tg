@@ -10,7 +10,7 @@ from config import config
 router = Router()
 
 @router.message(F.video)
-async def photo(message: Message):
+async def video(message: Message):
     if message.is_automatic_forward:
         chat.clean_context()
         text = "В канале опубликован новый пост с видео."

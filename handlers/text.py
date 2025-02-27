@@ -7,7 +7,7 @@ from aiogram.types import Message
 router = Router()
 
 @router.message(F.text)
-async def photo(message: Message):
+async def text(message: Message):
 
     try:
         if message.is_automatic_forward:
