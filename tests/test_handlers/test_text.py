@@ -14,7 +14,6 @@ async def test_text():
     test_bot.get_file.return_value = test_data
 
     test_chat = AsyncMock()
-    test_chat.clean_context = Mock()
     test_chat.get.return_value = "test_answer"
 
     test_message = AsyncMock()

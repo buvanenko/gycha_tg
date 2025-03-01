@@ -11,8 +11,13 @@ router = Router()
 
 @router.message(F.video)
 async def video(message: Message):
+
+    if message.message_thread_id is None:
+        thread_id = message.message_id
+    else:
+        thread_id = message.message_thread_id
+
     if message.is_automatic_forward:
-        chat.clean_context()
         text = "В канале опубликован новый пост с видео."
     elif (message.reply_to_message and message.reply_to_message.from_user.id == bot.id) or \
             (message.text is not None and "гыча" in message.text.lower()) or \
@@ -36,7 +41,7 @@ async def video(message: Message):
     logging.info(text)
 
     try:
-        answer = await chat.get("System", text)
+        answer = await chat.get("System", text, thread_id)
     except Exception as e:
         logging.error(e)
         answer = "Я хотел прокоментировать это видео, но мне отрезали нос и я расхотел."

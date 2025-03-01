@@ -10,11 +10,6 @@ def test_add_message():
     messages = get_messages()
     assert len(messages) == 2
 
-def test_clean_context():
-    clean_context()
-    messages = get_messages()
-    assert len(messages) == 1
-
 @pytest.mark.asyncio
 async def test_generate():
     text = await generate()
