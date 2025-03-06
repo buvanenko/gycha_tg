@@ -15,9 +15,15 @@ class Sber:
     auth: str
 
 @dataclass
+class Qwen:
+    token: str
+    model: str
+
+@dataclass
 class Telegram:
     token: str
     chat_id: int
+
 
 class Config:
     models: Models = Models(
@@ -27,6 +33,10 @@ class Config:
     sber: Sber = Sber(
         uid=os.getenv('SBER_UID'),
         auth=os.getenv('SBER_AUTH')
+    )
+    qwen: Qwen = Qwen(
+        token=os.getenv("QWEN_TOKEN"),
+        model=os.getenv("QWEN_MODEL")
     )
     telegram: Telegram = Telegram(
         token=os.getenv('TG_TOKEN'),

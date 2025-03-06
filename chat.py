@@ -2,6 +2,7 @@ from ollama import AsyncClient
 from prompts import prompts
 from config import config
 import sber
+import qwen
 
 import json
 
@@ -57,7 +58,9 @@ async def generate(thread_id: int = 0) -> str:
     
 async def get(username: str, message: str, thread_id: int = 0) -> str:
     add_message("user", username, message, thread_id)
-    answer = await sber.get_response(get_messages(thread_id))
+    answer = await qwen.get_response(get_messages(thread_id))
+    if answer is None:
+        answer = await sber.get_response(get_messages(thread_id))
     if answer is None:
         answer = await generate(thread_id)
     add_message("assistant", username, answer, thread_id)
