@@ -1,8 +1,5 @@
-import time
 import aiohttp
 from config import config
-
-from prompts import prompts
 
 url = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions"
 
