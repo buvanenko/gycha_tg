@@ -28,12 +28,15 @@ async def photo(message: Message):
     
     data = await bot.get_file(message.photo[-1].file_id)
     url = f"https://api.telegram.org/file/bot{config.telegram.token}/{data.file_path}"
-    description = await vision.get(url)
 
-    text = f"{text}\n\nОписание изображения: {description}"
-
-    text_ocr = await ocr.get(url)
-    text = f"{text}\n\nРаспознанный текст на изображении: {text_ocr}"
+    qwen_visual = await vision.get_qwen(url)
+    if qwen_visual is not None:
+        text = f"{text}\n\nОписание изображения: {qwen_visual}"
+    else:
+        description = await vision.get(url)
+        text = f"{text}\n\nОписание изображения: {description}"
+        text_ocr = await ocr.get(url)
+        text = f"{text}\n\nРаспознанный текст на изображении: {text_ocr}"
 
     if message.text is not None:
         text = f"{text}\n\nТекст в сообщении: {message.text}"

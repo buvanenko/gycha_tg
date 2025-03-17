@@ -18,6 +18,7 @@ class Sber:
 class Qwen:
     token: str
     model: str
+    visual: str
 
 @dataclass
 class Telegram:
@@ -36,7 +37,8 @@ class Config:
     )
     qwen: Qwen = Qwen(
         token=os.getenv("QWEN_TOKEN"),
-        model=os.getenv("QWEN_MODEL")
+        model=os.getenv("QWEN_MODEL"),
+        visual=os.getenv("QWEN_VISUAL")
     )
     telegram: Telegram = Telegram(
         token=os.getenv('TG_TOKEN'),

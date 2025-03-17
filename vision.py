@@ -7,6 +7,8 @@ from config import config
 import sber
 import qwen
 
+url = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions"
+
 async def translate(text: str) -> str:
     messages = [
         {"role":"system","content":prompts.translator},
@@ -24,6 +26,7 @@ async def translate(text: str) -> str:
     return answer
 
 async def get(url: str, lang="rus") -> str:
+    logging.info("Использую локальную модель для распознавания изображения...")
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             content = await response.read()
@@ -33,3 +36,37 @@ async def get(url: str, lang="rus") -> str:
     else:
         caption = caption_eng.response
     return caption
+
+async def get_qwen(image_url: str) -> str | None:
+    logging.info("Использую AlibabaCloud для распознавания изображения...")
+    headers = {
+        "Authorization": f"Bearer {config.qwen.token}",
+        "Content-Type": "application/json"
+    }
+    messages=[
+        {
+            "role": "system",
+            "content": [{"type": "text", "text": prompts.vision_qwen}],
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": image_url
+                    },
+                },
+                {"type": "text", "text": "Опиши данное изображение."},
+            ],
+        },
+    ]
+    payload = {"model": config.qwen.visual, "messages": messages}
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, headers=headers, json=payload, ssl=False) as response:
+            data = await response.json()
+    try:
+        answer = data['choices'][0]['message']['content']
+    except:
+        answer = None
+    return answer
