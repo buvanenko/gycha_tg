@@ -62,11 +62,14 @@ async def get_qwen(image_url: str) -> str | None:
         },
     ]
     payload = {"model": config.qwen.visual, "messages": messages}
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=payload, ssl=False) as response:
-            data = await response.json()
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, headers=headers, json=payload, ssl=False) as response:
+                data = await response.json()
+    except:
+        return None
     try:
         answer = data['choices'][0]['message']['content']
-    except:
+    except KeyError:
         answer = None
     return answer
