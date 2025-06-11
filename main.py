@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import chat
 from handlers import info, bad_chat, photo, sticker, video, text
 from bot import bot, dp
 

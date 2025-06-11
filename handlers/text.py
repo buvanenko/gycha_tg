@@ -1,4 +1,4 @@
-import chat
+from utils import chat
 import logging
 from bot import bot
 from aiogram import Router, F
@@ -25,5 +25,5 @@ async def text(message: Message):
             return
     except Exception as e:
         logging.error(e)
-        answer = "Я хотел прокоментировать это изображение, но мне отрезали нос и я расхотел."
+        answer = "Я хотел прокоментировать этот пост, но мне отрезали нос и я расхотел."
     await message.reply(answer, parse_mode="Markdown")

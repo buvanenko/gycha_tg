@@ -1,6 +1,4 @@
-import ocr
-import chat
-import vision
+from utils import chat, visual
 import logging
 from aiogram import Router, F
 from aiogram.types import Message
@@ -27,14 +25,9 @@ async def sticker(message: Message):
     data = await bot.get_file(message.sticker.thumbnail.file_id)
     url = f"https://api.telegram.org/file/bot{config.telegram.token}/{data.file_path}"
 
-    qwen_visual = await vision.get_qwen(url)
-    if qwen_visual is not None:
-        text = f"{text}\n\nОписание стикера: {qwen_visual}"
-    else:
-        description = await vision.get(url)
-        text = f"{text}\n\nОписание стикера: {description}"
-        text_ocr = await ocr.get(url)
-        text = f"{text}\n\nРаспознанный текст на стикере: {text_ocr}"
+    visual_description = await visual.get(url)
+    if visual_description is not None:
+        text = f"{text}\n\nОписание стикера: {visual_description}"
 
     if message.sticker.emoji is not None:
         text = f"{text}\n\nСмайлик стикера: {message.sticker.emoji}"
